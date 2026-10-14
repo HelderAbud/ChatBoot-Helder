@@ -4,3 +4,16 @@ server:
 chatboot:
   jwt:
     secret: ${CHATBOOT_JWT_SECRET}
+  storage-dir: ${STORAGE_DIR}
+
+spring:
+  datasource:
+    url: ${CHATBOOT_DB_URL:jdbc:postgresql://localhost:5436/chatboot}
+    username: ${CHATBOOT_DB_USER:chatboot}
+    password: ${CHATBOOT_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
