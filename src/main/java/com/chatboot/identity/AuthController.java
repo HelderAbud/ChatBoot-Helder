@@ -35,8 +35,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        IssuedToken token = authService.login(request.email(), request.password());
-        return new LoginResponse(token.accessToken(), JwtService.EXPIRES_IN_SECONDS, "Bearer");
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        try {
+            IssuedToken token = authService.login(request.email(), request.password());
+            return ResponseEntity.ok(new LoginResponse(token.accessToken(), JwtService.EXPIRES_IN_SECONDS, "Bearer"));
+        } catch (InvalidCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 }

@@ -84,4 +84,16 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.expiresIn").value(1800))
                 .andExpect(jsonPath("$.tokenType").value("Bearer"));
     }
+
+    @Test
+    void invalidCredentialsReturn401() throws Exception {
+        when(authService.login(any(), any())).thenThrow(new InvalidCredentialsException());
+
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"email":"ana@farol.example","password":"errada"}
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
 }
