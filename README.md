@@ -14,11 +14,12 @@ Já está na `main`:
 - Corte do Markdown por título, mantendo bloco de código dentro da seção.
 - Regra de abstenção e conferência de citação, testadas sem banco e sem modelo.
 - Cadastro e login com JWT de 30 minutos. A senha fica com hash BCrypt. Não há refresh nem recuperação de senha.
+- Upload que grava o Markdown em disco, com nome UUID, e os trechos de texto no PostgreSQL. O status dessa etapa é `TEXT_STORED`.
 
 Ainda não está pronto:
 
-- Gravar o arquivo em disco e os trechos no PostgreSQL.
-- Embedding, busca e a pergunta respondida pelo modelo.
+- Embedding, busca no workspace e a pergunta respondida pelo modelo.
+- Proteção Bearer das rotas e o teste de isolamento entre dois workspaces. Isso está na branch local, ainda sem merge.
 - Tela, PDF e OpenAPI de terceiros.
 
 O desenho da fatia está em `docs/superpowers/specs/2026-10-14-fatia-1-api-markdown-design.md`. As decisões fechadas estão em `AGENTS.md`.
@@ -29,10 +30,10 @@ No Windows, na raiz do repositório. Se o Maven reclamar de certificado ao baixa
 
 ```powershell
 $env:MAVEN_OPTS='-Djavax.net.ssl.trustStoreType=Windows-ROOT'
-.\mvnw.cmd "-Dtest=PasswordPolicyTest,JwtServiceTest,AuthControllerTest,EvidenceGateTest,CitationCheckerTest,MarkdownChunkerTest,MarkdownUploadValidatorTest" test
+.\mvnw.cmd test
 ```
 
-As aspas em volta de `-Dtest` são necessárias no PowerShell por causa da vírgula.
+Os testes atuais não sobem banco nem modelo. Integração com PostgreSQL fica no Ubuntu, quando existir.
 
 ## Ambiente
 

@@ -1,6 +1,6 @@
 # AGENTS.md — ChatBoot Helder
 
-Guia operacional do repositório. O produto se chama **DevDocs AI** no planejamento e **ChatBoot Helder** no GitHub: [HelderAbud/ChatBoot-Helder](https://github.com/HelderAbud/ChatBoot-Helder).
+Guia operacional do repositório **ChatBoot Helder**: [HelderAbud/ChatBoot-Helder](https://github.com/HelderAbud/ChatBoot-Helder). O nome DevDocs AI fica só nos documentos de planejamento. O pacote e o artefato continuam `com.chatboot` e `chatboot-helder`.
 
 Nada entra em código sem pedido explícito. Cada decisão em aberto é apresentada com explicação e só vale depois da aprovação.
 
@@ -8,8 +8,8 @@ Nada entra em código sem pedido explícito. Cada decisão em aberto é apresent
 
 | Arquivo | Papel |
 |---------|--------|
-| `DevDocs_AI_Contexto_Cursor.md` | Visão, escopo do MVP, arquitetura proposta, segurança e critérios de aceite |
-| `Análise do DevDocs AI.md` | Correções e riscos sobre esse plano (14/10/2026) |
+| `docs/contexto-devdocs-ai.md` | Visão, escopo do MVP, arquitetura proposta, segurança e critérios de aceite |
+| `docs/analise-devdocs-ai.md` | Correções e riscos sobre esse plano (14/10/2026) |
 | `AGENTS.md` | Decisões já aprovadas e como o agente trabalha neste repo |
 
 Quando este arquivo registrar uma decisão fechada, ela prevalece sobre o trecho correspondente do contexto.
@@ -137,14 +137,15 @@ Além da API, esta fatia inclui documentos em Markdown para abastecer o chat. As
 
 Nesta fatia o formato continua sendo só `.md`. PDF e os outros formatos ficam para depois. Dados reais de cliente, telefone, documento ou conversa particular não entram no Git.
 
-O ramo aprovado é a empresa fictícia **Farol Software**. Os cinco arquivos Markdown entram em `docs/acervo/farol-software/` quando a spec for aprovada. Dados reais de cliente, telefone, documento ou conversa particular não entram no Git.
+O ramo aprovado é a empresa fictícia **Farol Software**. Os cinco arquivos e as dez perguntas estão em `docs/acervo/farol-software/`.
 
 ## Decisões ainda em aberto
 
-Nenhuma escolha de ramo pendente. O número do mínimo de evidência e o par final de modelos Ollama continuam fora do contrato até o teste com documento real.
+Nenhuma escolha de ramo pendente. A medição de 14/10/2026 aponta `qwen3:8b` com thinking desligado e `bge-m3` com dimensão 1024, mas esse par ainda não está fechado nesta página. O mínimo de evidência continua aberto.
 
-A spec desta fatia está em `docs/superpowers/specs/2026-10-14-fatia-1-api-markdown-design.md`.
-O plano de implementação está em `docs/superpowers/plans/2026-10-14-fatia-1-api-markdown.md`.
+A spec está em `docs/superpowers/specs/2026-10-14-fatia-1-api-markdown-design.md`.
+O plano já executado está em `docs/superpowers/plans/2026-10-14-fatia-1-api-markdown.md`.
+O plano da busca está em `docs/superpowers/plans/2026-10-14-fatia-1-busca.md`.
 
 ## Como trabalhar
 
@@ -157,10 +158,10 @@ O plano de implementação está em `docs/superpowers/plans/2026-10-14-fatia-1-a
 
 ## Estado do repositório
 
-- Branch atual: `deleter-repositorio`, um commit (`README.md`).
-- `AGENTS.md`, `DevDocs_AI_Contexto_Cursor.md` e `Análise do DevDocs AI.md` ainda não estão no Git.
-- Não há código da aplicação.
+A `main` está em `c46d04e`. Nela já existem o acervo, as regras puras, o JWT, o upload em disco e os trechos de texto com status `TEXT_STORED`. Não há coluna `vector` nem `POST /api/v1/questions`.
+
+A branch local `feat/security-swagger` ainda não foi mergeada. Nela estão, sem commit, o `SecurityConfig`, o teste de isolamento entre workspaces, a medição do Ollama e o plano da busca.
 
 ## Próximo passo
 
-Você escolhe como executar o plano. O projeto Spring Boot e os arquivos do acervo só começam depois dessa escolha.
+A tarefa 1 do plano da busca registra o par medido. Ela espera o merge desta branch, para a migration `vector(1024)` não entrar no mesmo PR.

@@ -581,7 +581,7 @@ Não interpretar um item “ainda não confirmado” como falha; significa apena
 
 Abra a pasta existente `DevDocsAI` no Cursor e disponibilize este documento no contexto do projeto. Em seguida, cole a instrução abaixo no chat do Cursor.
 
-> Você está trabalhando no projeto DevDocs AI. Leia integralmente o arquivo `DevDocs_AI_Contexto_Cursor.md` (ou o nome do arquivo de contexto que estiver aberto) antes de propor qualquer solução.
+> Você está trabalhando no projeto ChatBoot Helder. Leia integralmente o arquivo `docs/contexto-devdocs-ai.md` antes de propor qualquer solução.
 >
 > **Nesta primeira tarefa, NÃO implemente funcionalidades, NÃO crie arquivos, NÃO instale dependências e NÃO altere código ou configuração.**
 >
