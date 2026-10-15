@@ -21,6 +21,9 @@ public class DocumentEntity {
     @Column(nullable = false)
     private String status;
 
+    @Column(name = "failure_message")
+    private String failureMessage;
+
     protected DocumentEntity() {}
 
     public DocumentEntity(UUID id, UUID workspaceId, String originalName, String status) {
@@ -34,7 +37,25 @@ public class DocumentEntity {
         return id;
     }
 
+    public String getOriginalName() {
+        return originalName;
+    }
+
     public String getStatus() {
         return status;
+    }
+
+    public String getFailureMessage() {
+        return failureMessage;
+    }
+
+    public void markFailed(String message) {
+        this.status = "FAILED";
+        this.failureMessage = message;
+    }
+
+    public void markCompleted() {
+        this.status = "COMPLETED";
+        this.failureMessage = null;
     }
 }

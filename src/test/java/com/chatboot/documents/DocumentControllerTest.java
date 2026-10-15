@@ -1,11 +1,13 @@
 package com.chatboot.documents;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Instant;
@@ -61,6 +63,34 @@ class DocumentControllerTest {
 
         verify(documentService).find(workspaceB, documentId);
         verify(documentService, never()).find(workspaceA, documentId);
+    }
+
+    @Test
+    void returnsServiceUnavailableWhenStoreFails() throws Exception {
+        UUID workspaceId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        when(documentService.store(eq(workspaceId), eq("catalogo-planos.md"), any()))
+                .thenReturn(new StoredDocument(UUID.randomUUID(), "FAILED"));
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(tokenFor(workspaceId)));
+        MockMultipartFile file =
+                new MockMultipartFile("file", "catalogo-planos.md", "text/markdown", "# Plano Farol".getBytes());
+
+        mockMvc.perform(multipart("/api/v1/documents").file(file)).andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    void returnsDocumentNameAndFailureMessage() throws Exception {
+        UUID workspaceId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        UUID documentId = UUID.fromString("cccccccc-cccc-cccc-cccc-cccccccccccc");
+        when(documentService.find(workspaceId, documentId))
+                .thenReturn(Optional.of(new DocumentDetails(
+                        documentId, "catalogo-planos.md", "FAILED", "embedding unavailable")));
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(tokenFor(workspaceId)));
+
+        mockMvc.perform(get("/api/v1/documents/" + documentId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.originalName").value("catalogo-planos.md"))
+                .andExpect(jsonPath("$.status").value("FAILED"))
+                .andExpect(jsonPath("$.failureMessage").value("embedding unavailable"));
     }
 
     private static Jwt tokenFor(UUID workspaceId) {

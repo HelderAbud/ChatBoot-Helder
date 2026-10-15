@@ -110,12 +110,13 @@ Aprovado: duas portas.
 
 ## Decisão fechada — modelos (14/10/2026)
 
-Aprovado: testar antes de travar.
+Aprovado em 14/10/2026, depois da medição:
 
-- Primeiro par no Ollama: **Qwen3 8B** com thinking desligado, e **BGE-M3**.
-- Se a CPU não aguentar: testar **Qwen3 4B** na geração e **Nomic Embed Text** no embedding.
-- O par escolhido só entra aqui depois do teste de tempo e da sua aprovação.
-- Trocar o modelo de embedding depois exige reindexar.
+- Geração: `qwen3:8b`, com thinking desligado.
+- Embedding: `bge-m3`.
+- Dimensão da coluna: `vector(1024)`.
+- A medição está em `docs/acervo/farol-software/medicao-ollama.md`.
+- Trocar o modelo de embedding exige reindexar.
 
 ## Decisão fechada — primeiro usuário (14/10/2026)
 
@@ -141,7 +142,7 @@ O ramo aprovado é a empresa fictícia **Farol Software**. Os cinco arquivos e a
 
 ## Decisões ainda em aberto
 
-Nenhuma escolha de ramo pendente. A medição de 14/10/2026 aponta `qwen3:8b` com thinking desligado e `bge-m3` com dimensão 1024, mas esse par ainda não está fechado nesta página. O mínimo de evidência continua aberto.
+Nenhuma escolha de ramo pendente. O mínimo de evidência continua aberto.
 
 A spec está em `docs/superpowers/specs/2026-10-14-fatia-1-api-markdown-design.md`.
 O plano já executado está em `docs/superpowers/plans/2026-10-14-fatia-1-api-markdown.md`.
@@ -158,10 +159,8 @@ O plano da busca está em `docs/superpowers/plans/2026-10-14-fatia-1-busca.md`.
 
 ## Estado do repositório
 
-A `main` está em `c46d04e`. Nela já existem o acervo, as regras puras, o JWT, o upload em disco e os trechos de texto com status `TEXT_STORED`. Não há coluna `vector` nem `POST /api/v1/questions`.
-
-A branch local `feat/security-swagger` ainda não foi mergeada. Nela estão, sem commit, o `SecurityConfig`, o teste de isolamento entre workspaces, a medição do Ollama e o plano da busca.
+A `main` está em `b214839`. Nela já existem o acervo, as regras puras, o JWT, o upload em disco, os trechos de texto com status `TEXT_STORED` e a proteção Bearer. Não há coluna `vector` nem `POST /api/v1/questions`.
 
 ## Próximo passo
 
-A tarefa 1 do plano da busca registra o par medido. Ela espera o merge desta branch, para a migration `vector(1024)` não entrar no mesmo PR.
+A tarefa 4 do plano da busca persiste o usuário e o workspace no cadastro. A API ainda não sobe: falta o bean do `EmbeddingPort`, que entra na tarefa 6.
