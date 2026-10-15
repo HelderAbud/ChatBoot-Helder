@@ -199,25 +199,25 @@ git commit -m "feat: mark an upload failed when embedding is unavailable"
 - Consumes: tabelas `users` e `workspaces` da V1. `PasswordPolicy` já rejeita senha curta no controller.
 - Produces: `AuthService.register(email, password, workspaceName)` grava os dois e devolve `RegisteredUser`. `login` devolve `IssuedToken` ou lança credencial inválida. Senha persistida é hash BCrypt, nunca o texto.
 
-- [ ] **Step 1: Teste com repositórios falsos**
+- [x] **Step 1: Teste com repositórios falsos**
 
 E-mail novo: `register` chama `save` do usuário e do workspace, e o hash não é igual à senha `senha-ok`. E-mail já existente: lança `DuplicateEmailException` e não salva workspace. Login com senha errada não emite token.
 
-- [ ] **Step 2: Rodar e ver falhar**
+- [x] **Step 2: Rodar e ver falhar**
 
 Run: `.\mvnw.cmd -Dtest=AuthServiceTest test`  
 Expected: FAIL, porque `register` ainda lança `UnsupportedOperationException`.
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 `BCryptPasswordEncoder` com strength 10. `existsByEmail` antes do insert. O id do workspace gerado no Java entra no JWT que o `JwtService` já emite. Login usa `encoder.matches`. Não logar a senha.
 
-- [ ] **Step 4: Rodar**
+- [x] **Step 4: Rodar**
 
 Run: `.\mvnw.cmd "-Dtest=AuthServiceTest,AuthControllerTest" test`  
 Expected: PASS. O controller segue com o serviço mockado; senha curta continua 400 sem chamar o serviço.
 
-- [ ] **Step 5: Commit, só se o Helder pedir**
+- [x] **Step 5: Commit, só se o Helder pedir**
 
 ```bash
 git commit -m "feat: persist the user and workspace on registration"
@@ -240,7 +240,7 @@ git commit -m "feat: persist the user and workspace on registration"
 - Consumes: `EvidenceGate.decide`, `CitationChecker.keep`, `EmbeddingPort.embed`
 - Produces: `POST /api/v1/questions` com corpo `{ "question": "..." }`. Resposta 200: `answer`, `abstained`, `citations`. Cada citação tem `chunkId`, `documentName` e `heading`. `ScoredChunk` é `record ScoredChunk(String id, String documentName, String heading, String body, double score)`.
 
-- [ ] **Step 1: Teste de abstenção**
+- [x] **Step 1: Teste de abstenção**
 
 Busca vazia. O serviço responde a frase fixa, `abstained` true, citações vazias, e `verify(chat, never()).answer(any(), any())`.
 
@@ -248,12 +248,12 @@ Segundo teste: um trecho com score igual ao mínimo `0.50`. O chat devolve o id 
 
 Terceiro teste: a busca tem score `0.49` e o mínimo é `0.50`. Abstem e não chama o chat.
 
-- [ ] **Step 2: Rodar e ver falhar**
+- [x] **Step 2: Rodar e ver falhar**
 
 Run: `.\mvnw.cmd -Dtest=QuestionServiceTest test`  
 Expected: FAIL, classe ausente.
 
-- [ ] **Step 3: Implementar**
+- [x] **Step 3: Implementar**
 
 `QuestionService.ask(UUID userId, UUID workspaceId, String question, double minimumScore)` embeda a pergunta, busca com limite 5, monta `RetrievedChunk` sem o corpo e chama `EvidenceGate`. No `ABSTAIN`, devolve a frase fixa. No `ANSWER`, chama `ChatPort.answer(question, chunks)`. `CitationChecker.keep` filtra os ids. A citação publicada copia `documentName` e `heading` do `ScoredChunk` recuperado.
 
@@ -261,12 +261,12 @@ O controller lê `sub` e `workspaceId` do JWT. A busca filtra por esse workspace
 
 Se `EmbeddingPort` ou `ChatPort` lançar `EmbeddingUnavailableException` depois que o portão decidiu `ANSWER`, o controller responde 503 e não grava resposta inventada. Na abstenção, Ollama de geração não é chamado mesmo que esteja fora.
 
-- [ ] **Step 4: Rodar**
+- [x] **Step 4: Rodar**
 
 Run: `.\mvnw.cmd "-Dtest=QuestionServiceTest,EvidenceGateTest,CitationCheckerTest" test`  
 Expected: PASS.
 
-- [ ] **Step 5: Commit, só se o Helder pedir**
+- [x] **Step 5: Commit, só se o Helder pedir**
 
 ```bash
 git commit -m "feat: abstain or keep only citations from the retrieved set"

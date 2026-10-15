@@ -163,4 +163,4 @@ A `main` está em `b214839`. Nela já existem o acervo, as regras puras, o JWT, 
 
 ## Próximo passo
 
-A tarefa 4 do plano da busca persiste o usuário e o workspace no cadastro. A API ainda não sobe: falta o bean do `EmbeddingPort`, que entra na tarefa 6.
+A tarefa 6 do plano da busca liga o Ollama e a busca no pgvector. A API ainda não sobe: faltam os beans de `EmbeddingPort`, `ChatPort` e `ChunkSearch`.

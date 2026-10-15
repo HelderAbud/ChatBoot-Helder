@@ -1,14 +1,47 @@
 package com.chatboot.identity;
 
+import java.util.UUID;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
+    private final UserAccountRepository users;
+    private final WorkspaceRepository workspaces;
+    private final PasswordEncoder encoder;
+    private final JwtService tokens;
+
+    public AuthService(
+            UserAccountRepository users,
+            WorkspaceRepository workspaces,
+            PasswordEncoder encoder,
+            JwtService tokens) {
+        this.users = users;
+        this.workspaces = workspaces;
+        this.encoder = encoder;
+        this.tokens = tokens;
+    }
+
+    @Transactional
     public RegisteredUser register(String email, String password, String workspaceName) {
-        throw new UnsupportedOperationException("user persistence arrives with the database migration");
+        if (users.existsByEmail(email)) {
+            throw new DuplicateEmailException();
+        }
+        UUID userId = UUID.randomUUID();
+        UUID workspaceId = UUID.randomUUID();
+        users.save(new UserAccount(userId, email, encoder.encode(password)));
+        workspaces.save(new WorkspaceEntity(workspaceId, workspaceName, userId));
+        return new RegisteredUser(userId, workspaceId);
     }
 
     public IssuedToken login(String email, String password) {
-        throw new UnsupportedOperationException("user persistence arrives with the database migration");
+        UserAccount user = users.findByEmail(email).orElseThrow(InvalidCredentialsException::new);
+        if (!encoder.matches(password, user.getPasswordHash())) {
+            throw new InvalidCredentialsException();
+        }
+        WorkspaceEntity workspace =
+                workspaces.findByOwnerUserId(user.getId()).orElseThrow(InvalidCredentialsException::new);
+        return new IssuedToken(tokens.issue(user.getId(), workspace.getId()));
     }
 }
