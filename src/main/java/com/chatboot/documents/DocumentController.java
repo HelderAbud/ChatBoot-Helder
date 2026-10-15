@@ -36,11 +36,14 @@ public class DocumentController {
             return ResponseEntity.badRequest().build();
         }
         StoredDocument stored = documents.store(currentWorkspaceId(), file.getOriginalFilename(), content);
+        if ("FAILED".equals(stored.status())) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(stored);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(stored);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StoredDocument> get(@PathVariable UUID id) {
+    public ResponseEntity<DocumentDetails> get(@PathVariable UUID id) {
         return documents
                 .find(currentWorkspaceId(), id)
                 .map(ResponseEntity::ok)

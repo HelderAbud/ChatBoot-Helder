@@ -60,7 +60,7 @@ A branch `feat/security-swagger` ainda não está na `main`. Ela contém `Securi
 - Consumes: `medicao-ollama.md` com `qwen3:8b`, thinking desligado, `bge-m3` e dimensão 1024
 - Produces: o contrato escrito que as tarefas seguintes não podem contradizer
 
-- [ ] **Step 1: Atualizar a decisão de modelos**
+- [x] **Step 1: Atualizar a decisão de modelos**
 
 Na seção "Decisão fechada — modelos", substituir o texto de "testar antes de travar" por:
 
@@ -76,11 +76,11 @@ Aprovado em 14/10/2026, depois da medição:
 
 Em "Decisões ainda em aberto", deixar só o mínimo de evidência. O par de modelos sai dessa lista.
 
-- [ ] **Step 2: Fechar a ressalva da medição**
+- [x] **Step 2: Fechar a ressalva da medição**
 
 Trocar a última frase de `medicao-ollama.md` por: "Par registrado no AGENTS.md em 14/10/2026. O mínimo de evidência continua em aberto."
 
-- [ ] **Step 3: Parar para o Helder conferir o texto**
+- [x] **Step 3: Parar para o Helder conferir o texto**
 
 Não criar migration nesta tarefa.
 
@@ -95,7 +95,7 @@ Não criar migration nesta tarefa.
 - Consumes: tabelas `documents` e `document_chunks` da V1
 - Produces: `document_chunks.embedding vector(1024)` e `documents.failure_message`
 
-- [ ] **Step 1: Escrever a migration**
+- [x] **Step 1: Escrever a migration**
 
 ```sql
 create extension if not exists vector;
@@ -114,11 +114,11 @@ alter table document_chunks
     add column embedding vector(1024);
 ```
 
-- [ ] **Step 2: Não aplicar daqui se a branch de segurança ainda não foi mergeada**
+- [x] **Step 2: Não aplicar daqui se a branch de segurança ainda não foi mergeada**
 
 A V1 já está no banco `chatboot` do Ubuntu. A V2 só roda quando a API subir depois do merge. Não editar a V1.
 
-- [ ] **Step 3: Commit, só se o Helder pedir**
+- [x] **Step 3: Commit, só se o Helder pedir**
 
 ```bash
 git add src/main/resources/db/migration/V2__chunk_embeddings.sql
@@ -143,7 +143,7 @@ git commit -m "feat: add a 1024-dimension embedding column"
 - Consumes: `MarkdownChunker.chunk`, `LocalFileStorage.store`
 - Produces: `EmbeddingPort.embed(String text)` devolve `float[]` de tamanho 1024 ou lança `EmbeddingUnavailableException`. `ChunkEmbeddingStore.save(UUID chunkId, float[] embedding)`. `DocumentService.store` devolve `StoredDocument` com status `COMPLETED` ou `FAILED`.
 
-- [ ] **Step 1: Teste que falha quando o embedding não existe**
+- [x] **Step 1: Teste que falha quando o embedding não existe**
 
 ```java
 @Test
@@ -161,23 +161,23 @@ void marksDocumentFailedWhenEmbeddingIsUnavailable() {
 
 O teste seguinte pede `COMPLETED` e uma chamada a `vectors.save` com um vetor de 1024 posições quando `embed` devolve esse vetor.
 
-- [ ] **Step 2: Rodar e ver falhar**
+- [x] **Step 2: Rodar e ver falhar**
 
 Run: `.\mvnw.cmd -Dtest=DocumentServiceTest test`  
 Expected: FAIL, `EmbeddingPort` ausente.
 
-- [ ] **Step 3: Implementar o mínimo**
+- [x] **Step 3: Implementar o mínimo**
 
 `DocumentService.store` continua gravando o arquivo e os trechos. Para cada trecho, chama `embeddings.embed(heading + "\n" + body)`. Se voltar o vetor, chama `vectors.save`. No fim, status `COMPLETED`. Se `EmbeddingUnavailableException`, grava o documento com status `FAILED` e `failure_message` curta `embedding unavailable`, e devolve `FAILED` sem relançar. A transação precisa commitar o `FAILED`.
 
 O controller, no sucesso com `COMPLETED`, responde 201. Se o status devolvido for `FAILED`, responde 503. `GET /api/v1/documents/{id}` passa a devolver `documentId`, `originalName`, `status` e `failureMessage`. Documento de outro workspace continua 404.
 
-- [ ] **Step 4: Rodar**
+- [x] **Step 4: Rodar**
 
 Run: `.\mvnw.cmd "-Dtest=DocumentServiceTest,DocumentControllerTest" test`  
 Expected: PASS. O teste antigo do PDF continua 400 e não chama o serviço.
 
-- [ ] **Step 5: Commit, só se o Helder pedir**
+- [x] **Step 5: Commit, só se o Helder pedir**
 
 ```bash
 git commit -m "feat: mark an upload failed when embedding is unavailable"

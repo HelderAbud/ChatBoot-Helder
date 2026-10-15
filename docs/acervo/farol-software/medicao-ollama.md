@@ -44,4 +44,4 @@ A resposta curta completou. Não foi preciso repetir com `qwen3:4b`.
 - Não há coluna `vector`.
 - O status do upload continua `TEXT_STORED`.
 - Não existe `POST /api/v1/questions`.
-- Este par ainda não entra no `AGENTS.md`. Isso só acontece depois de um sim do Helder.
+- Par registrado no AGENTS.md em 14/10/2026. O mínimo de evidência continua em aberto.
