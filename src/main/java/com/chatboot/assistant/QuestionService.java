@@ -60,7 +60,11 @@ public class QuestionService {
                 published.add(new Citation(chunk.id(), chunk.documentName(), chunk.heading()));
             }
         }
-        return store(userId, workspaceId, question, new QuestionResponse(draft.answer(), false, published));
+        String answer = draft.answer() == null ? "" : draft.answer();
+        if (answer.isBlank() || published.isEmpty()) {
+            return store(userId, workspaceId, question, new QuestionResponse(ABSTAIN, true, List.of()));
+        }
+        return store(userId, workspaceId, question, new QuestionResponse(answer, false, published));
     }
 
     private QuestionResponse store(UUID userId, UUID workspaceId, String question, QuestionResponse response) {

@@ -98,6 +98,39 @@ class QuestionServiceTest {
     }
 
     @Test
+    void abstainsWhenTheModelReturnsABlankAnswer() {
+        ScoredChunk chunk = new ScoredChunk("chunk-1", "catalogo-planos.md", "Plano Farol", "R$ 99", 0.50);
+        when(embeddings.embed("qual o preco")).thenReturn(new float[] {0.5f});
+        when(search.search(eq(WORKSPACE_ID), any(), eq(5))).thenReturn(List.of(chunk));
+        when(chat.answer(eq("qual o preco"), any())).thenReturn(new ChatDraft("  ", List.of("chunk-1")));
+
+        QuestionResponse response = service.ask(USER_ID, WORKSPACE_ID, "qual o preco", 0.50);
+
+        assertEquals(ABSTAIN, response.answer());
+        assertTrue(response.abstained());
+        assertTrue(response.citations().isEmpty());
+        StoredQuestion saved = savedQuestion();
+        assertEquals(ABSTAIN, saved.getAnswer());
+        assertTrue(saved.isAbstained());
+        assertTrue(saved.getCitations().isEmpty());
+    }
+
+    @Test
+    void abstainsWhenEveryCitationFallsOutsideTheRetrievedSet() {
+        ScoredChunk chunk = new ScoredChunk("chunk-1", "catalogo-planos.md", "Plano Farol", "R$ 99", 0.50);
+        when(embeddings.embed("qual o preco")).thenReturn(new float[] {0.6f});
+        when(search.search(eq(WORKSPACE_ID), any(), eq(5))).thenReturn(List.of(chunk));
+        when(chat.answer(eq("qual o preco"), any()))
+                .thenReturn(new ChatDraft("O plano Farol custa R$ 99.", List.of("fora-da-busca")));
+
+        QuestionResponse response = service.ask(USER_ID, WORKSPACE_ID, "qual o preco", 0.50);
+
+        assertEquals(ABSTAIN, response.answer());
+        assertTrue(response.abstained());
+        assertTrue(response.citations().isEmpty());
+    }
+
+    @Test
     void doesNotStoreAnAnswerWhenChatIsUnavailable() {
         ScoredChunk chunk = new ScoredChunk("chunk-1", "catalogo-planos.md", "Plano Farol", "R$ 99", 0.50);
         when(embeddings.embed("qual o preco")).thenReturn(new float[] {0.4f});

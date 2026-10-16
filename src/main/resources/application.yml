@@ -13,6 +13,10 @@ chatboot:
     minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:1.01}
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
   datasource:
     url: ${CHATBOOT_DB_URL:jdbc:postgresql://localhost:5436/chatboot}
     username: ${CHATBOOT_DB_USER:chatboot}

@@ -15,19 +15,23 @@ public class JdbcChunkSearch implements ChunkSearch {
         this.jdbc = jdbc;
     }
 
+    static final String SQL =
+            """
+            select c.id, d.original_name, c.heading, c.body,
+                   1 - (c.embedding <=> cast(:embedding as vector)) as score
+            from document_chunks c
+            join documents d on d.id = c.document_id
+            where c.workspace_id = :workspaceId
+              and d.status = 'COMPLETED'
+              and c.embedding is not null
+            order by c.embedding <=> cast(:embedding as vector)
+            limit :limit
+            """;
+
     @Override
     public List<ScoredChunk> search(UUID workspaceId, float[] embedding, int limit) {
         return jdbc.query(
-                """
-                select c.id, d.original_name, c.heading, c.body,
-                       1 - (c.embedding <=> cast(:embedding as vector)) as score
-                from document_chunks c
-                join documents d on d.id = c.document_id
-                where c.workspace_id = :workspaceId
-                  and c.embedding is not null
-                order by c.embedding <=> cast(:embedding as vector)
-                limit :limit
-                """,
+                SQL,
                 new MapSqlParameterSource()
                         .addValue("embedding", JdbcChunkEmbeddingStore.literal(embedding))
                         .addValue("workspaceId", workspaceId)

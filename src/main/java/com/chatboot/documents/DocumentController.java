@@ -28,12 +28,12 @@ public class DocumentController {
     }
 
     @PostMapping
-    public ResponseEntity<StoredDocument> upload(@RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> upload(@RequestPart("file") MultipartFile file) throws IOException {
         byte[] content = file.getBytes();
         try {
             validator.validate(file.getOriginalFilename(), content);
         } catch (UploadRejectedException ex) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new UploadRejection(ex.reason().name()));
         }
         StoredDocument stored = documents.store(currentWorkspaceId(), file.getOriginalFilename(), content);
         if ("FAILED".equals(stored.status())) {
