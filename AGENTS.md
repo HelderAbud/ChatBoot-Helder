@@ -159,7 +159,7 @@ O plano da busca está em `docs/superpowers/plans/2026-10-14-fatia-1-busca.md`.
 
 ## Estado do repositório
 
-A `main` está em `b214839`. Nela já existem o acervo, as regras puras, o JWT, o upload em disco, os trechos de texto com status `TEXT_STORED` e a proteção Bearer. Não há coluna `vector` nem `POST /api/v1/questions`.
+A `main` de referência desta linha é `f41f471`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência continua `1.01`.
 
 ## Próximo passo
 

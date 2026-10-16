@@ -41,7 +41,9 @@ class DocumentControllerTest {
     void rejectsPdfWithoutCallingService() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "manual.pdf", "application/pdf", "# Titulo".getBytes());
 
-        mockMvc.perform(multipart("/api/v1/documents").file(file)).andExpect(status().isBadRequest());
+        mockMvc.perform(multipart("/api/v1/documents").file(file))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.reason").value("NOT_MARKDOWN"));
 
         verify(documentService, never()).store(any(), any(), any());
     }

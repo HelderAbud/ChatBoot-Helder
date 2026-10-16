@@ -6,21 +6,19 @@ O acervo de demonstração é da empresa fictícia **Farol Software**, produto *
 
 ## Estado atual
 
-Já está na `main`:
+O que a API faz:
 
 - Cinco documentos Markdown da Farol (manual, política interna, catálogo, procedimento e roteiro de atendimento) e dez perguntas de avaliação.
-- API Spring Boot 3.5.16 em Java 21.
-- Validação de upload: só `.md`, até 2 MB, sem byte nulo.
-- Corte do Markdown por título, mantendo bloco de código dentro da seção.
-- Regra de abstenção e conferência de citação, testadas sem banco e sem modelo.
+- API Spring Boot 3.5.16 em Java 21, com rotas protegidas por Bearer.
 - Cadastro e login com JWT de 30 minutos. A senha fica com hash BCrypt. Não há refresh nem recuperação de senha.
-- Upload que grava o Markdown em disco, com nome UUID, e os trechos de texto no PostgreSQL. O status dessa etapa é `TEXT_STORED`.
+- Upload de um `.md` de até 2 MB. O arquivo no disco usa um UUID. Os trechos vão para o PostgreSQL e o embedding `bge-m3` grava o vetor. O status fica `COMPLETED` só quando o vetor existe; se o modelo falha, fica `FAILED`.
+- `POST /api/v1/questions` busca só no workspace e só em documento `COMPLETED`. Sem evidência, ou sem citação aproveitável, a API se abstém e não inventa resposta. A geração usa `qwen3:8b` local.
 
 Ainda não está pronto:
 
-- Embedding, busca no workspace e a pergunta respondida pelo modelo.
-- Proteção Bearer das rotas e o teste de isolamento entre dois workspaces. Isso está na branch local, ainda sem merge.
+- O mínimo de evidência continua `1.01`. Com esse número a API se abstém, porque o score de cosseno não passa de 1. A medição está em `docs/acervo/farol-software/minimo-evidencia.md`.
 - Tela, PDF e OpenAPI de terceiros.
+- Teste de isolamento entre dois workspaces contra um PostgreSQL real.
 
 O desenho da fatia está em `docs/superpowers/specs/2026-10-14-fatia-1-api-markdown-design.md`. As decisões fechadas estão em `AGENTS.md`.
 
