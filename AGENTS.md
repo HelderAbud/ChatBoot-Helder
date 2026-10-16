@@ -163,4 +163,4 @@ A `main` está em `b214839`. Nela já existem o acervo, as regras puras, o JWT, 
 
 ## Próximo passo
 
-A tarefa 6 do plano da busca liga o Ollama e a busca no pgvector. A API ainda não sobe: faltam os beans de `EmbeddingPort`, `ChatPort` e `ChunkSearch`.
+A tarefa 7 do plano da busca mede o mínimo de evidência no acervo e para. O número não entra no Git sem um sim separado.

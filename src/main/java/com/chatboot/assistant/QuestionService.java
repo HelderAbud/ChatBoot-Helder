@@ -47,7 +47,7 @@ public class QuestionService {
         if (gate.decide(retrieved, minimumScore) == EvidenceGate.Decision.ABSTAIN) {
             return store(userId, workspaceId, question, new QuestionResponse(ABSTAIN, true, List.of()));
         }
-        ChatDraft draft = chat.answer(question, retrieved);
+        ChatDraft draft = chat.answer(question, found);
         Set<String> retrievedIds = retrieved.stream().map(RetrievedChunk::id).collect(Collectors.toSet());
         Map<String, ScoredChunk> byId = new LinkedHashMap<>();
         for (ScoredChunk chunk : found) {
