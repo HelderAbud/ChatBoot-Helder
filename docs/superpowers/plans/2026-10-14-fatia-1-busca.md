@@ -347,14 +347,14 @@ git commit -m "feat: embed chunks with bge-m3 and search inside the workspace"
 - Consumes: os cinco Markdown, `avaliacao.md` e um workspace real criado pelo cadastro
 - Produces: o melhor score de cada uma das dez perguntas. Não altera `1.01` neste arquivo sem um sim separado.
 
-- [ ] **Step 1: Subir a API no Windows apontando para o Postgres 5436 e o Ollama 11434**
+- [x] **Step 1: Subir a API no Windows apontando para o Postgres 5436 e o Ollama 11434**
 
 Cadastrar um usuário, enviar os cinco Markdown e esperar `COMPLETED` em cada um.
 
-- [ ] **Step 2: Para cada pergunta de `avaliacao.md`, anotar o melhor score da busca antes do portão**
+- [x] **Step 2: Para cada pergunta de `avaliacao.md`, anotar o melhor score da busca antes do portão**
 
 Não chamar o modelo de geração nas quatro perguntas sem resposta no acervo. O arquivo guarda pergunta, melhor score e se o trecho esperado apareceu entre os cinco.
 
-- [ ] **Step 3: Parar**
+- [x] **Step 3: Parar**
 
 Não gravar `CHATBOOT_EVIDENCE_MINIMUM` no Git. O Helder escolhe o número depois de ler `minimo-evidencia.md`. Não criar coluna de outra dimensão e não marcar o upload antigo como `COMPLETED` sem o vetor.

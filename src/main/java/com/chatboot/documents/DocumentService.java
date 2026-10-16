@@ -45,7 +45,7 @@ public class DocumentService {
             int index = 0;
             for (MarkdownChunk chunk : chunker.chunk(new String(content, StandardCharsets.UTF_8))) {
                 UUID chunkId = UUID.randomUUID();
-                chunks.save(new DocumentChunkEntity(
+                chunks.saveAndFlush(new DocumentChunkEntity(
                         chunkId, documentId, workspaceId, index, chunk.heading(), chunk.body()));
                 index++;
                 try {
