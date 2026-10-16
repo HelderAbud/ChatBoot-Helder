@@ -288,11 +288,11 @@ git commit -m "feat: abstain or keep only citations from the retrieved set"
 - Consumes: as portas das tarefas 3 e 5
 - Produces: beans que fecham as portas. Busca SQL restrita a `workspace_id`. Chat com `think` desligado.
 
-- [ ] **Step 1: Dependência**
+- [x] **Step 1: Dependência**
 
 No `pom.xml`, importar o BOM `org.springframework.ai:spring-ai-bom:1.1.4` e adicionar `spring-ai-starter-model-ollama`. Não adicionar o vector store pronto do Spring AI. A busca é SQL deste projeto.
 
-- [ ] **Step 2: Configuração**
+- [x] **Step 2: Configuração**
 
 ```yaml
 chatboot:
@@ -304,7 +304,7 @@ chatboot:
     minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:1.01}
 ```
 
-- [ ] **Step 3: Gravação e busca**
+- [x] **Step 3: Gravação e busca**
 
 `JdbcChunkEmbeddingStore.save` executa `update document_chunks set embedding = cast(:embedding as vector) where id = :id`. O texto do vetor é a lista de floats entre colchetes.
 
@@ -321,16 +321,16 @@ order by c.embedding <=> cast(:embedding as vector)
 limit :limit
 ```
 
-- [ ] **Step 4: Chat**
+- [x] **Step 4: Chat**
 
 `OllamaChatAdapter` chama o modelo `qwen3:8b` com thinking desligado. O prompt pede somente um JSON `{"answer":"...","citedChunkIds":["..."]}` e inclui id, título e corpo de cada trecho recuperado. JSON inválido vira resposta sem citações, não uma frase inventada no lugar da abstenção. Falha de rede lança `EmbeddingUnavailableException`, que o controller da tarefa 5 já traduz em 503 quando a decisão era `ANSWER`.
 
-- [ ] **Step 5: Compilar no Windows**
+- [x] **Step 5: Compilar no Windows**
 
 Run: `.\mvnw.cmd -DskipTests package`  
 Expected: BUILD SUCCESS. Não subir a pergunta contra o acervo nesta tarefa. O mínimo `1.01` ainda abstém de propósito.
 
-- [ ] **Step 6: Commit, só se o Helder pedir**
+- [x] **Step 6: Commit, só se o Helder pedir**
 
 ```bash
 git commit -m "feat: embed chunks with bge-m3 and search inside the workspace"

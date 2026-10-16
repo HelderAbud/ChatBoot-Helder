@@ -5,6 +5,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CitationChecker {
     public List<String> keep(Set<String> retrievedIds, List<String> citedIds) {
         LinkedHashSet<String> kept = new LinkedHashSet<>();

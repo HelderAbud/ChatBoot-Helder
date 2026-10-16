@@ -2,6 +2,9 @@ package com.chatboot.assistant;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class EvidenceGate {
     public enum Decision { ABSTAIN, ANSWER }
 

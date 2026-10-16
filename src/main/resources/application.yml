@@ -5,6 +5,12 @@ chatboot:
   jwt:
     secret: ${CHATBOOT_JWT_SECRET}
   storage-dir: ${STORAGE_DIR}
+  ollama:
+    base-url: ${CHATBOOT_OLLAMA_URL:http://localhost:11434}
+    embedding-model: bge-m3
+    chat-model: qwen3:8b
+  evidence:
+    minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:1.01}
 
 spring:
   datasource:
@@ -17,3 +23,9 @@ spring:
     open-in-view: false
   flyway:
     enabled: true
+  ai:
+    ollama:
+      base-url: ${chatboot.ollama.base-url}
+      embedding:
+        options:
+          model: ${chatboot.ollama.embedding-model}
