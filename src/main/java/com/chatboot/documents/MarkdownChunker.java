@@ -5,6 +5,9 @@ import java.util.List;
 
 public class MarkdownChunker {
     public List<MarkdownChunk> chunk(String markdown) {
+        if (markdown.startsWith("\uFEFF")) {
+            markdown = markdown.substring(1);
+        }
         List<MarkdownChunk> chunks = new ArrayList<>();
         String heading = null;
         StringBuilder body = new StringBuilder();
@@ -35,6 +38,7 @@ public class MarkdownChunker {
 
     private static void flush(List<MarkdownChunk> chunks, String heading, StringBuilder body) {
         if (heading == null) {
+            body.setLength(0);
             return;
         }
         chunks.add(new MarkdownChunk(heading, body.toString().trim()));
