@@ -1,12 +1,16 @@
 package com.chatboot.identity;
 
 import java.util.UUID;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
+    private static final String UNKNOWN_USER_HASH = new BCryptPasswordEncoder(10).encode("chatboot-unknown-user");
+
     private final UserAccountRepository users;
     private final WorkspaceRepository workspaces;
     private final PasswordEncoder encoder;
@@ -30,13 +34,21 @@ public class AuthService {
         }
         UUID userId = UUID.randomUUID();
         UUID workspaceId = UUID.randomUUID();
-        users.save(new UserAccount(userId, email, encoder.encode(password)));
+        try {
+            users.save(new UserAccount(userId, email, encoder.encode(password)));
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateEmailException();
+        }
         workspaces.save(new WorkspaceEntity(workspaceId, workspaceName, userId));
         return new RegisteredUser(userId, workspaceId);
     }
 
     public IssuedToken login(String email, String password) {
-        UserAccount user = users.findByEmail(email).orElseThrow(InvalidCredentialsException::new);
+        UserAccount user = users.findByEmail(email).orElse(null);
+        if (user == null) {
+            encoder.matches(password, UNKNOWN_USER_HASH);
+            throw new InvalidCredentialsException();
+        }
         if (!encoder.matches(password, user.getPasswordHash())) {
             throw new InvalidCredentialsException();
         }

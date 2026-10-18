@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -87,6 +89,31 @@ class AuthServiceTest {
         assertThrows(InvalidCredentialsException.class, () -> authService.login("ana@farol.example", "senha-ok"));
 
         verify(tokens, never()).issue(any(), any());
+    }
+
+    @Test
+    void unknownEmailStillChecksAPasswordHash() {
+        PasswordEncoder passwords = org.mockito.Mockito.mock(PasswordEncoder.class);
+        AuthService service = new AuthService(users, workspaces, passwords, tokens);
+        when(users.findByEmail("ana@farol.example")).thenReturn(Optional.empty());
+        when(passwords.matches(eq("senha-ok"), any())).thenReturn(false);
+
+        assertThrows(InvalidCredentialsException.class, () -> service.login("ana@farol.example", "senha-ok"));
+
+        verify(passwords).matches(eq("senha-ok"), any());
+        verify(tokens, never()).issue(any(), any());
+    }
+
+    @Test
+    void duplicateInsertBecomesDuplicateEmail() {
+        when(users.existsByEmail("ana@farol.example")).thenReturn(false);
+        when(users.save(any())).thenThrow(new DataIntegrityViolationException("duplicate"));
+
+        assertThrows(
+                DuplicateEmailException.class,
+                () -> authService.register("ana@farol.example", "senha-ok", "Farol"));
+
+        verify(workspaces, never()).save(any());
     }
 
     @Test
