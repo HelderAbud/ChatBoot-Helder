@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DocumentService {
@@ -36,7 +35,6 @@ public class DocumentService {
         this.vectors = vectors;
     }
 
-    @Transactional
     public StoredDocument store(UUID workspaceId, String originalName, byte[] content) {
         try {
             UUID documentId = storage.store(content);

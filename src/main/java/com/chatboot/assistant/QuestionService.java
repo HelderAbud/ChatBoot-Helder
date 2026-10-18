@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QuestionService {
@@ -38,7 +37,6 @@ public class QuestionService {
         this.questions = questions;
     }
 
-    @Transactional
     public QuestionResponse ask(UUID userId, UUID workspaceId, String question, double minimumScore) {
         List<ScoredChunk> found = search.search(workspaceId, embeddings.embed(question), SEARCH_LIMIT);
         List<RetrievedChunk> retrieved = found.stream()
