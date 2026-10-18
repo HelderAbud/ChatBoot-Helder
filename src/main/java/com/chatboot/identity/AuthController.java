@@ -22,7 +22,13 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         try {
             passwordPolicy.check(request.password());
-        } catch (PasswordPolicy.PasswordTooShortException ex) {
+        } catch (PasswordPolicy.PasswordTooShortException | PasswordPolicy.PasswordTooLongException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+        if (request.email() == null
+                || request.email().isBlank()
+                || request.workspaceName() == null
+                || request.workspaceName().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
         try {
