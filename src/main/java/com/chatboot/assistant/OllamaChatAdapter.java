@@ -3,6 +3,7 @@ package com.chatboot.assistant;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,13 @@ public class OllamaChatAdapter implements ChatPort {
     public OllamaChatAdapter(
             @Value("${chatboot.ollama.base-url}") String baseUrl,
             @Value("${chatboot.ollama.chat-model}") String model,
+            @Value("${chatboot.ollama.connect-timeout:5s}") Duration connect,
+            @Value("${chatboot.ollama.read-timeout:120s}") Duration read,
             ObjectMapper mapper) {
-        this.client = RestClient.builder().baseUrl(baseUrl).build();
+        this.client = RestClient.builder()
+                .baseUrl(baseUrl)
+                .requestFactory(OllamaClients.requestFactory(connect, read))
+                .build();
         this.model = model;
         this.mapper = mapper;
     }

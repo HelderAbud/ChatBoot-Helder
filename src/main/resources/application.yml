@@ -9,6 +9,8 @@ chatboot:
     base-url: ${CHATBOOT_OLLAMA_URL:http://localhost:11434}
     embedding-model: bge-m3
     chat-model: qwen3:8b
+    connect-timeout: 5s
+    read-timeout: 120s
   evidence:
     minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:1.01}
 
