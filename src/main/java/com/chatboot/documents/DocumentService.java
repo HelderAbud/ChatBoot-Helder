@@ -36,9 +36,10 @@ public class DocumentService {
     }
 
     public StoredDocument store(UUID workspaceId, String originalName, byte[] content) {
+        DocumentEntity document = null;
         try {
             UUID documentId = storage.store(content);
-            DocumentEntity document = new DocumentEntity(documentId, workspaceId, originalName, TEXT_STORED);
+            document = new DocumentEntity(documentId, workspaceId, originalName, TEXT_STORED);
             documents.save(document);
             int index = 0;
             for (MarkdownChunk chunk : chunker.chunk(new String(content, StandardCharsets.UTF_8))) {
@@ -59,7 +60,20 @@ public class DocumentService {
             documents.save(document);
             return new StoredDocument(documentId, COMPLETED);
         } catch (Exception ex) {
+            markFailed(document, "failed to store markdown");
             throw new IllegalStateException("failed to store markdown", ex);
+        }
+    }
+
+    private void markFailed(DocumentEntity document, String message) {
+        if (document == null) {
+            return;
+        }
+        document.markFailed(message);
+        try {
+            documents.save(document);
+        } catch (RuntimeException ignored) {
+            // the caller still receives the original failure
         }
     }
 
