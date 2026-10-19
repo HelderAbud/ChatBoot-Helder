@@ -50,4 +50,18 @@ class MarkdownChunkerTest {
         assertEquals("Acesso", chunks.get(0).heading());
         assertEquals("login", chunks.get(0).body());
     }
+
+    @Test
+    void keepsAHashtagLineInsideTheSection() {
+        String markdown = """
+                # Acesso
+                #hashtag
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertEquals("#hashtag", chunks.get(0).body());
+    }
 }
