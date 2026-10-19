@@ -18,7 +18,7 @@ public class MarkdownChunker {
                 appendLine(body, line);
                 continue;
             }
-            if (!insideFence && line.startsWith("#")) {
+            if (!insideFence && isHeading(line)) {
                 flush(chunks, heading, body);
                 heading = line.replaceFirst("^#+\\s*", "");
                 continue;
@@ -27,6 +27,17 @@ public class MarkdownChunker {
         }
         flush(chunks, heading, body);
         return chunks;
+    }
+
+    private static boolean isHeading(String line) {
+        int marks = 0;
+        while (marks < line.length() && line.charAt(marks) == '#') {
+            marks++;
+        }
+        if (marks < 1 || marks > 6) {
+            return false;
+        }
+        return marks == line.length() || Character.isWhitespace(line.charAt(marks));
     }
 
     private static void appendLine(StringBuilder body, String line) {
