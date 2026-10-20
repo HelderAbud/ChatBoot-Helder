@@ -27,9 +27,13 @@ public class QuestionController {
 
     @PostMapping
     public ResponseEntity<QuestionResponse> ask(@RequestBody QuestionRequest request) {
+        UUID userId = currentUserId();
+        UUID workspaceId = currentWorkspaceId();
+        if (request.question() == null || request.question().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         try {
-            return ResponseEntity.ok(
-                    questions.ask(currentUserId(), currentWorkspaceId(), request.question(), minimumScore));
+            return ResponseEntity.ok(questions.ask(userId, workspaceId, request.question(), minimumScore));
         } catch (EmbeddingUnavailableException ex) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
         }
