@@ -64,4 +64,58 @@ class MarkdownChunkerTest {
         assertEquals("Acesso", chunks.get(0).heading());
         assertEquals("#hashtag", chunks.get(0).body());
     }
+
+    @Test
+    void keepsAHeadingInsideATildeFence() {
+        String markdown = """
+                # Acesso
+                ~~~
+                # isto nao e secao
+                ~~~
+                fim
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertTrue(chunks.get(0).body().contains("# isto nao e secao"));
+        assertTrue(chunks.get(0).body().contains("fim"));
+    }
+
+    @Test
+    void keepsAHeadingInsideAnIndentedTildeFence() {
+        String markdown = """
+                # Acesso
+                   ~~~
+                # isto nao e secao
+                   ~~~
+                fim
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertTrue(chunks.get(0).body().contains("# isto nao e secao"));
+    }
+
+    @Test
+    void doesNotCloseATildeFenceWithBackticks() {
+        String markdown = """
+                # Acesso
+                ~~~
+                ```
+                # isto nao e secao
+                ~~~
+                fim
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertTrue(chunks.get(0).body().contains("# isto nao e secao"));
+        assertTrue(chunks.get(0).body().contains("fim"));
+    }
 }
