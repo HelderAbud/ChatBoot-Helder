@@ -10,6 +10,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -123,10 +124,24 @@ class AuthServiceTest {
     @Test
     void duplicateInsertBecomesDuplicateEmail() {
         when(users.existsByEmail("ana@farol.example")).thenReturn(false);
-        when(users.save(any())).thenThrow(new DataIntegrityViolationException("duplicate"));
+        when(users.save(any()))
+                .thenThrow(new DataIntegrityViolationException("duplicate", new SQLException("duplicate key", "23505")));
 
         assertThrows(
                 DuplicateEmailException.class,
+                () -> authService.register("ana@farol.example", "senha-ok", "Farol"));
+
+        verify(workspaces, never()).save(any());
+    }
+
+    @Test
+    void otherConstraintViolationIsNotADuplicateEmail() {
+        when(users.existsByEmail("ana@farol.example")).thenReturn(false);
+        when(users.save(any()))
+                .thenThrow(new DataIntegrityViolationException("too long", new SQLException("value too long", "22001")));
+
+        assertThrows(
+                DataIntegrityViolationException.class,
                 () -> authService.register("ana@farol.example", "senha-ok", "Farol"));
 
         verify(workspaces, never()).save(any());

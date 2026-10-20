@@ -1,5 +1,6 @@
 package com.chatboot.identity;
 
+import java.sql.SQLException;
 import java.util.UUID;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,7 +38,10 @@ public class AuthService {
         try {
             users.save(new UserAccount(userId, email, encoder.encode(password)));
         } catch (DataIntegrityViolationException ex) {
-            throw new DuplicateEmailException();
+            if (isUniqueViolation(ex)) {
+                throw new DuplicateEmailException();
+            }
+            throw ex;
         }
         workspaces.save(new WorkspaceEntity(workspaceId, workspaceName, userId));
         return new RegisteredUser(userId, workspaceId);
@@ -59,5 +63,16 @@ public class AuthService {
         WorkspaceEntity workspace =
                 workspaces.findByOwnerUserId(user.getId()).orElseThrow(InvalidCredentialsException::new);
         return new IssuedToken(tokens.issue(user.getId(), workspace.getId()));
+    }
+
+    private static boolean isUniqueViolation(Throwable error) {
+        Throwable current = error;
+        while (current != null) {
+            if (current instanceof SQLException sql && "23505".equals(sql.getSQLState())) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 }
