@@ -1,6 +1,10 @@
 package com.chatboot.assistant;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -69,6 +73,30 @@ class QuestionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"question\":\"qual o preco\"}"))
                 .andExpect(status().isServiceUnavailable());
+    }
+
+    @Test
+    void rejectsABlankQuestionWithoutCallingTheModel() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(tokenFor(WORKSPACE_ID)));
+
+        mockMvc.perform(post("/api/v1/questions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"question\":null}"))
+                .andExpect(status().isBadRequest());
+
+        verify(questions, never()).ask(any(), any(), any(), anyDouble());
+    }
+
+    @Test
+    void rejectsAWhitespaceQuestionWithoutCallingTheModel() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(tokenFor(WORKSPACE_ID)));
+
+        mockMvc.perform(post("/api/v1/questions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"question\":\"   \"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(questions, never()).ask(any(), any(), any(), anyDouble());
     }
 
     private static Jwt tokenFor(UUID workspaceId) {
