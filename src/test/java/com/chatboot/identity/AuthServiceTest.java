@@ -92,6 +92,22 @@ class AuthServiceTest {
     }
 
     @Test
+    void nullPasswordIsInvalidCredentials() {
+        assertThrows(InvalidCredentialsException.class, () -> authService.login("ana@farol.example", null));
+
+        verify(users, never()).findByEmail(any());
+        verify(tokens, never()).issue(any(), any());
+    }
+
+    @Test
+    void nullEmailIsInvalidCredentials() {
+        assertThrows(InvalidCredentialsException.class, () -> authService.login(null, "senha-ok"));
+
+        verify(users, never()).findByEmail(any());
+        verify(tokens, never()).issue(any(), any());
+    }
+
+    @Test
     void unknownEmailStillChecksAPasswordHash() {
         PasswordEncoder passwords = org.mockito.Mockito.mock(PasswordEncoder.class);
         AuthService service = new AuthService(users, workspaces, passwords, tokens);

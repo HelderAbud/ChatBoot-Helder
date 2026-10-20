@@ -44,6 +44,10 @@ public class AuthService {
     }
 
     public IssuedToken login(String email, String password) {
+        if (password == null || email == null) {
+            encoder.matches("chatboot-unknown-user", UNKNOWN_USER_HASH);
+            throw new InvalidCredentialsException();
+        }
         UserAccount user = users.findByEmail(email).orElse(null);
         if (user == null) {
             encoder.matches(password, UNKNOWN_USER_HASH);
