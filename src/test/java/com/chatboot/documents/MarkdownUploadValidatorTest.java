@@ -43,4 +43,11 @@ class MarkdownUploadValidatorTest {
                 () -> validator.validate("manual.md", new byte[] {'#', 0}));
         assertEquals(UploadRejectedException.Reason.NULL_BYTE, error.reason());
     }
+
+    @Test
+    void rejectsANullByteInTheFileName() {
+        UploadRejectedException error = assertThrows(UploadRejectedException.class,
+                () -> validator.validate("manual\0.md", "# Titulo".getBytes()));
+        assertEquals(UploadRejectedException.Reason.NULL_BYTE, error.reason());
+    }
 }
