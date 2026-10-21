@@ -96,4 +96,16 @@ class DocumentServiceTest {
         assertEquals("COMPLETED", stored.status());
         verify(vectors).save(any(UUID.class), org.mockito.ArgumentMatchers.eq(vector));
     }
+
+    @Test
+    void keepsTextStoredWhenTheMarkdownHasNoSection() throws Exception {
+        when(storage.store(any())).thenReturn(UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"));
+        when(chunker.chunk(any())).thenReturn(List.of());
+
+        StoredDocument stored = service.store(
+                WORKSPACE_ID, "solto.md", "sem titulo".getBytes(StandardCharsets.UTF_8));
+
+        assertEquals("TEXT_STORED", stored.status());
+        verify(embeddings, never()).embed(any());
+    }
 }

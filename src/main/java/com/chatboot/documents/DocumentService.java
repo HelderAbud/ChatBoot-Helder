@@ -3,6 +3,7 @@ package com.chatboot.documents;
 import com.chatboot.assistant.EmbeddingPort;
 import com.chatboot.assistant.EmbeddingUnavailableException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,12 @@ public class DocumentService {
             UUID documentId = storage.store(content);
             document = new DocumentEntity(documentId, workspaceId, originalName, TEXT_STORED);
             documents.save(document);
+            List<MarkdownChunk> pieces = chunker.chunk(new String(content, StandardCharsets.UTF_8));
+            if (pieces.isEmpty()) {
+                return new StoredDocument(documentId, TEXT_STORED);
+            }
             int index = 0;
-            for (MarkdownChunk chunk : chunker.chunk(new String(content, StandardCharsets.UTF_8))) {
+            for (MarkdownChunk chunk : pieces) {
                 UUID chunkId = UUID.randomUUID();
                 chunks.saveAndFlush(new DocumentChunkEntity(
                         chunkId, documentId, workspaceId, index, chunk.heading(), chunk.body()));
