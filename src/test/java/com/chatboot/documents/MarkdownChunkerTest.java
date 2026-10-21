@@ -118,4 +118,38 @@ class MarkdownChunkerTest {
         assertTrue(chunks.get(0).body().contains("# isto nao e secao"));
         assertTrue(chunks.get(0).body().contains("fim"));
     }
+
+    @Test
+    void splitsOnAHeadingIndentedByThreeSpaces() {
+        String markdown = """
+                # Acesso
+                login
+                   ## Senha
+                doze
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(2, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertEquals("login", chunks.get(0).body());
+        assertEquals("Senha", chunks.get(1).heading());
+        assertEquals("doze", chunks.get(1).body());
+    }
+
+    @Test
+    void keepsAFourSpaceHeadingLineInsideTheSection() {
+        String markdown = """
+                # Acesso
+                    # isto nao e secao
+                fim
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertTrue(chunks.get(0).body().contains("# isto nao e secao"));
+        assertTrue(chunks.get(0).body().contains("fim"));
+    }
 }
