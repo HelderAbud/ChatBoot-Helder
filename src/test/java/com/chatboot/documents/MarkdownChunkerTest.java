@@ -152,4 +152,30 @@ class MarkdownChunkerTest {
         assertTrue(chunks.get(0).body().contains("# isto nao e secao"));
         assertTrue(chunks.get(0).body().contains("fim"));
     }
+
+    @Test
+    void dropsClosingHashesFromTheHeading() {
+        String markdown = """
+                # Acesso ##
+                login
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertEquals("login", chunks.get(0).body());
+    }
+
+    @Test
+    void keepsAHashThatIsPartOfTheHeadingText() {
+        String markdown = """
+                # Acesso#
+                login
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals("Acesso#", chunks.get(0).heading());
+    }
 }

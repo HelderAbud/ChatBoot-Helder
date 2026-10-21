@@ -91,7 +91,30 @@ public class MarkdownChunker {
     }
 
     private static String headingText(String line) {
-        return line.substring(indent(line)).replaceFirst("^#+\\s*", "");
+        String rest = line.substring(indent(line));
+        int marks = 0;
+        while (marks < rest.length() && rest.charAt(marks) == '#') {
+            marks++;
+        }
+        int start = marks;
+        while (start < rest.length() && Character.isWhitespace(rest.charAt(start))) {
+            start++;
+        }
+        int end = rest.length();
+        while (end > start && Character.isWhitespace(rest.charAt(end - 1))) {
+            end--;
+        }
+        int close = end;
+        while (close > start && rest.charAt(close - 1) == '#') {
+            close--;
+        }
+        if (close < end && close > start && Character.isWhitespace(rest.charAt(close - 1))) {
+            end = close;
+            while (end > start && Character.isWhitespace(rest.charAt(end - 1))) {
+                end--;
+            }
+        }
+        return rest.substring(start, end);
     }
 
     private static boolean isHeading(String line) {
