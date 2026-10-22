@@ -99,6 +99,18 @@ class QuestionControllerTest {
         verify(questions, never()).ask(any(), any(), any(), anyDouble());
     }
 
+    @Test
+    void rejectsAQuestionWithANullByteWithoutCallingTheModel() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(tokenFor(WORKSPACE_ID)));
+
+        mockMvc.perform(post("/api/v1/questions")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"question\":\"preco\\u0000\"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(questions, never()).ask(any(), any(), any(), anyDouble());
+    }
+
     private static Jwt tokenFor(UUID workspaceId) {
         Instant now = Instant.now();
         return Jwt.withTokenValue("token")

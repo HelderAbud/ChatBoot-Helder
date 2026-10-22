@@ -29,7 +29,9 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> ask(@RequestBody QuestionRequest request) {
         UUID userId = currentUserId();
         UUID workspaceId = currentWorkspaceId();
-        if (request.question() == null || request.question().isBlank()) {
+        if (request.question() == null
+                || request.question().isBlank()
+                || request.question().indexOf('\0') >= 0) {
             return ResponseEntity.badRequest().build();
         }
         try {
