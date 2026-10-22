@@ -1,7 +1,7 @@
 package com.chatboot.documents;
 
 public class UploadRejectedException extends RuntimeException {
-    public enum Reason { EMPTY, TOO_LARGE, NOT_MARKDOWN, NULL_BYTE }
+    public enum Reason { EMPTY, TOO_LARGE, NOT_MARKDOWN, NULL_BYTE, FILENAME_TOO_LONG }
 
     private final Reason reason;
 

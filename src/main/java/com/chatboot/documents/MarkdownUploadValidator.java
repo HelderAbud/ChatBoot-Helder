@@ -16,6 +16,9 @@ public class MarkdownUploadValidator {
         if (filename.indexOf('\0') >= 0) {
             throw new UploadRejectedException(UploadRejectedException.Reason.NULL_BYTE);
         }
+        if (filename.length() > 500) {
+            throw new UploadRejectedException(UploadRejectedException.Reason.FILENAME_TOO_LONG);
+        }
         for (byte value : content) {
             if (value == 0) {
                 throw new UploadRejectedException(UploadRejectedException.Reason.NULL_BYTE);
