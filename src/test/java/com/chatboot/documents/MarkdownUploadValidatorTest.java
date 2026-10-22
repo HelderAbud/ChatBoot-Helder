@@ -50,4 +50,11 @@ class MarkdownUploadValidatorTest {
                 () -> validator.validate("manual\0.md", "# Titulo".getBytes()));
         assertEquals(UploadRejectedException.Reason.NULL_BYTE, error.reason());
     }
+
+    @Test
+    void rejectsAFileNameLongerThanTheColumn() {
+        UploadRejectedException error = assertThrows(UploadRejectedException.class,
+                () -> validator.validate("a".repeat(498) + ".md", "# Titulo".getBytes()));
+        assertEquals(UploadRejectedException.Reason.FILENAME_TOO_LONG, error.reason());
+    }
 }
