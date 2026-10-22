@@ -140,4 +140,14 @@ class AuthControllerTest {
                                 """))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    void nullByteInLoginEmailReturns400WithoutCallingService() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"ana\\u0000@farol.example\",\"password\":\"senha-ok\"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(), any());
+    }
 }
