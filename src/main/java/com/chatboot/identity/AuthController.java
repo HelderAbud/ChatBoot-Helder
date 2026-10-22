@@ -27,8 +27,10 @@ public class AuthController {
         }
         if (request.email() == null
                 || request.email().isBlank()
+                || request.email().indexOf('\0') >= 0
                 || request.workspaceName() == null
-                || request.workspaceName().isBlank()) {
+                || request.workspaceName().isBlank()
+                || request.workspaceName().indexOf('\0') >= 0) {
             return ResponseEntity.badRequest().build();
         }
         try {
