@@ -115,6 +115,30 @@ class AuthControllerTest {
     }
 
     @Test
+    void emailLongerThanColumnReturns400WithoutCallingService() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"email":"%s","password":"senha-ok","workspaceName":"Farol"}
+                                """.formatted("a".repeat(321))))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(), any(), any());
+    }
+
+    @Test
+    void workspaceNameLongerThanColumnReturns400WithoutCallingService() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"email":"ana@farol.example","password":"senha-ok","workspaceName":"%s"}
+                                """.formatted("a".repeat(201))))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(), any(), any());
+    }
+
+    @Test
     void loginReturnsBearerToken() throws Exception {
         when(authService.login("ana@farol.example", "senha-ok")).thenReturn(new IssuedToken("token-1"));
 
