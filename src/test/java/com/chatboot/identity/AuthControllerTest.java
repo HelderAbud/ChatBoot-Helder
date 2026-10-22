@@ -95,6 +95,26 @@ class AuthControllerTest {
     }
 
     @Test
+    void nullByteInEmailReturns400WithoutCallingService() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"ana\\u0000@farol.example\",\"password\":\"senha-ok\",\"workspaceName\":\"Farol\"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(), any(), any());
+    }
+
+    @Test
+    void nullByteInWorkspaceNameReturns400WithoutCallingService() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"ana@farol.example\",\"password\":\"senha-ok\",\"workspaceName\":\"Farol\\u0000\"}"))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).register(any(), any(), any());
+    }
+
+    @Test
     void loginReturnsBearerToken() throws Exception {
         when(authService.login("ana@farol.example", "senha-ok")).thenReturn(new IssuedToken("token-1"));
 
