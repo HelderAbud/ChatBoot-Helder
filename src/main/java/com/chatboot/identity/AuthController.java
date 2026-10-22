@@ -44,6 +44,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        if (request.email() != null && request.email().indexOf('\0') >= 0) {
+            return ResponseEntity.badRequest().build();
+        }
         try {
             IssuedToken token = authService.login(request.email(), request.password());
             return ResponseEntity.ok(new LoginResponse(token.accessToken(), JwtService.EXPIRES_IN_SECONDS, "Bearer"));
