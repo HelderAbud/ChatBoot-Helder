@@ -141,7 +141,11 @@ public class MarkdownChunker {
             body.setLength(0);
             return;
         }
-        chunks.add(new MarkdownChunk(heading, body.toString().trim()));
+        String text = body.toString().trim();
         body.setLength(0);
+        if (text.isEmpty()) {
+            return;
+        }
+        chunks.add(new MarkdownChunk(heading, text));
     }
 }
