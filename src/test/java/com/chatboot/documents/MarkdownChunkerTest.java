@@ -194,4 +194,19 @@ class MarkdownChunkerTest {
         assertEquals("Senha", chunks.get(0).heading());
         assertEquals("doze", chunks.get(0).body());
     }
+
+    @Test
+    void keepsTheIndentOfTheSectionBody() {
+        String markdown = """
+                # Acesso
+                    quatro
+                fim
+                """;
+
+        List<MarkdownChunk> chunks = new MarkdownChunker().chunk(markdown);
+
+        assertEquals(1, chunks.size());
+        assertEquals("Acesso", chunks.get(0).heading());
+        assertEquals("    quatro\nfim", chunks.get(0).body());
+    }
 }

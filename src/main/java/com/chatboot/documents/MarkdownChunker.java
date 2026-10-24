@@ -141,9 +141,14 @@ public class MarkdownChunker {
             body.setLength(0);
             return;
         }
-        String text = body.toString().trim();
+        String raw = body.toString();
         body.setLength(0);
-        if (text.isEmpty()) {
+        int end = raw.length();
+        while (end > 0 && raw.charAt(end - 1) <= ' ') {
+            end--;
+        }
+        String text = raw.substring(0, end);
+        if (text.isBlank()) {
             return;
         }
         chunks.add(new MarkdownChunk(heading, text));
