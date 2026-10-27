@@ -159,8 +159,8 @@ O plano da busca está em `docs/superpowers/plans/2026-10-14-fatia-1-busca.md`.
 
 ## Estado do repositório
 
-A `main` de referência desta linha é `1d9c561`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência continua `1.01`.
+A `main` de referência desta linha é `989b99a`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência é `0.556`.
 
 ## Próximo passo
 
-A medição está em `docs/acervo/farol-software/minimo-evidencia.md`. O mínimo continua `1.01` até o Helder escolher o número.
+A medição está em `docs/acervo/farol-software/minimo-evidencia.md`. O mínimo `0.556` cobre a faixa respondível. As perguntas 8 e 10 dessa medição ainda passam da primeira porta e dependem do prompt.

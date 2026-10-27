@@ -12,7 +12,7 @@ chatboot:
     connect-timeout: 5s
     read-timeout: 120s
   evidence:
-    minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:1.01}
+    minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:0.556}
 
 spring:
   servlet:

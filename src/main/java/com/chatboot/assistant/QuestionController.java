@@ -20,7 +20,7 @@ public class QuestionController {
     private final double minimumScore;
 
     public QuestionController(
-            QuestionService questions, @Value("${chatboot.evidence.minimum-score:1.01}") double minimumScore) {
+            QuestionService questions, @Value("${chatboot.evidence.minimum-score:0.556}") double minimumScore) {
         this.questions = questions;
         this.minimumScore = minimumScore;
     }
