@@ -1,5 +1,7 @@
 package com.chatboot.documents;
 
+import java.nio.charset.StandardCharsets;
+
 public class MarkdownUploadValidator {
     static final int MAX_BYTES = 2_097_152;
 
@@ -22,6 +24,12 @@ public class MarkdownUploadValidator {
         for (byte value : content) {
             if (value == 0) {
                 throw new UploadRejectedException(UploadRejectedException.Reason.NULL_BYTE);
+            }
+        }
+        String markdown = new String(content, StandardCharsets.UTF_8);
+        for (MarkdownChunk chunk : new MarkdownChunker().chunk(markdown)) {
+            if (chunk.heading().length() > 500) {
+                throw new UploadRejectedException(UploadRejectedException.Reason.HEADING_TOO_LONG);
             }
         }
     }

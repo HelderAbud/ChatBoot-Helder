@@ -3,6 +3,7 @@ package com.chatboot.documents;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 class MarkdownUploadValidatorTest {
@@ -56,5 +57,13 @@ class MarkdownUploadValidatorTest {
         UploadRejectedException error = assertThrows(UploadRejectedException.class,
                 () -> validator.validate("a".repeat(498) + ".md", "# Titulo".getBytes()));
         assertEquals(UploadRejectedException.Reason.FILENAME_TOO_LONG, error.reason());
+    }
+
+    @Test
+    void rejectsAHeadingLongerThanTheColumn() {
+        byte[] content = ("# " + "a".repeat(501) + "\ntexto").getBytes(StandardCharsets.UTF_8);
+        UploadRejectedException error = assertThrows(UploadRejectedException.class,
+                () -> validator.validate("manual.md", content));
+        assertEquals(UploadRejectedException.Reason.HEADING_TOO_LONG, error.reason());
     }
 }
