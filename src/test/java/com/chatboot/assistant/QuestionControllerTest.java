@@ -45,7 +45,7 @@ class QuestionControllerTest {
 
     @Test
     void returnsTheWorkspaceAnswer() throws Exception {
-        when(questions.ask(eq(USER_ID), eq(WORKSPACE_ID), eq("qual o preco"), eq(1.01d)))
+        when(questions.ask(eq(USER_ID), eq(WORKSPACE_ID), eq("qual o preco"), eq(0.556d)))
                 .thenReturn(new QuestionResponse(
                         "O plano Farol custa R$ 99.",
                         false,
@@ -65,7 +65,7 @@ class QuestionControllerTest {
 
     @Test
     void returnsServiceUnavailableWhenTheModelIsDown() throws Exception {
-        when(questions.ask(eq(USER_ID), eq(WORKSPACE_ID), eq("qual o preco"), eq(1.01d)))
+        when(questions.ask(eq(USER_ID), eq(WORKSPACE_ID), eq("qual o preco"), eq(0.556d)))
                 .thenThrow(new EmbeddingUnavailableException());
         SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(tokenFor(WORKSPACE_ID)));
 

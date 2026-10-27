@@ -2,7 +2,7 @@
 
 Medição do melhor score da busca, antes do portão, no workspace `42f13dce-c088-408e-85e0-e8c6d1609958`. Embedding `bge-m3`. A busca é a mesma SQL da API: no máximo 5 trechos, só deste workspace, score = `1 - distância`. O modelo de geração não foi chamado.
 
-O número do mínimo não foi escolhido. `CHATBOOT_EVIDENCE_MINIMUM` continua `1.01`.
+Em 27/10/2026 o mínimo passou a `0.556`. Esse valor cobre a faixa respondível. As perguntas 8 e 10 continuam acima dele.
 
 ## O que aconteceu no upload
 

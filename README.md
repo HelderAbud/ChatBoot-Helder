@@ -12,11 +12,10 @@ O que a API faz:
 - API Spring Boot 3.5.16 em Java 21, com rotas protegidas por Bearer.
 - Cadastro e login com JWT de 30 minutos. A senha fica com hash BCrypt. Não há refresh nem recuperação de senha.
 - Upload de um `.md` de até 2 MB. O arquivo no disco usa um UUID. Os trechos vão para o PostgreSQL e o embedding `bge-m3` grava o vetor. O status fica `COMPLETED` só quando o vetor existe; se o modelo falha, fica `FAILED`.
-- `POST /api/v1/questions` busca só no workspace e só em documento `COMPLETED`. Sem evidência, ou sem citação aproveitável, a API se abstém e não inventa resposta. A geração usa `qwen3:8b` local.
+- `POST /api/v1/questions` busca só no workspace e só em documento `COMPLETED`. O mínimo de evidência é `0.556`. Sem evidência, ou sem citação aproveitável, a API se abstém e não inventa resposta. A geração usa `qwen3:8b` local. A medição está em `docs/acervo/farol-software/minimo-evidencia.md`.
 
 Ainda não está pronto:
 
-- O mínimo de evidência continua `1.01`. Com esse número a API se abstém, porque o score de cosseno não passa de 1. A medição está em `docs/acervo/farol-software/minimo-evidencia.md`.
 - Tela, PDF e OpenAPI de terceiros.
 - Teste de isolamento entre dois workspaces contra um PostgreSQL real.
 
