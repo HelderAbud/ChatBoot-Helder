@@ -159,7 +159,7 @@ O plano da busca está em `docs/superpowers/plans/2026-10-14-fatia-1-busca.md`.
 
 ## Estado do repositório
 
-A `main` de referência desta linha é `989b99a`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência é `0.556`.
+A `main` de referência desta linha é `7defe02`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência é `0.556`.
 
 ## Próximo passo
 
