@@ -10,7 +10,7 @@ chatboot:
     embedding-model: bge-m3
     chat-model: qwen3:8b
     connect-timeout: 5s
-    read-timeout: 120s
+    read-timeout: 180s
   evidence:
     minimum-score: ${CHATBOOT_EVIDENCE_MINIMUM:0.556}
 

@@ -159,8 +159,8 @@ O plano da busca está em `docs/superpowers/plans/2026-10-14-fatia-1-busca.md`.
 
 ## Estado do repositório
 
-A `main` de referência desta linha é `7defe02`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência é `0.556`.
+A `main` de referência desta linha é `923e0d5`. Nela já existem o acervo, o JWT, o upload com embedding, a busca no workspace e o `POST /api/v1/questions`. O mínimo de evidência é `0.556`.
 
 ## Próximo passo
 
-A medição está em `docs/acervo/farol-software/minimo-evidencia.md`. O mínimo `0.556` cobre a faixa respondível. As perguntas 8 e 10 dessa medição ainda passam da primeira porta e dependem do prompt.
+A medição está em `docs/acervo/farol-software/minimo-evidencia.md`. Em 09/11/2026 as perguntas 8 e 10 se abstiveram depois da geração. O tempo de leitura é `180s`, acima dos 138 s da pergunta 8.

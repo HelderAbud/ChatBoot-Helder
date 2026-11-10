@@ -22,7 +22,7 @@ public class OllamaChatAdapter implements ChatPort {
             @Value("${chatboot.ollama.base-url}") String baseUrl,
             @Value("${chatboot.ollama.chat-model}") String model,
             @Value("${chatboot.ollama.connect-timeout:5s}") Duration connect,
-            @Value("${chatboot.ollama.read-timeout:120s}") Duration read,
+            @Value("${chatboot.ollama.read-timeout:180s}") Duration read,
             ObjectMapper mapper) {
         this.client = RestClient.builder()
                 .baseUrl(baseUrl)
