@@ -12,7 +12,7 @@ class OllamaClientConfig {
     @Bean
     RestClientCustomizer ollamaTimeouts(
             @Value("${chatboot.ollama.connect-timeout:5s}") Duration connect,
-            @Value("${chatboot.ollama.read-timeout:120s}") Duration read) {
+            @Value("${chatboot.ollama.read-timeout:180s}") Duration read) {
         return builder -> builder.requestFactory(OllamaClients.requestFactory(connect, read));
     }
 }

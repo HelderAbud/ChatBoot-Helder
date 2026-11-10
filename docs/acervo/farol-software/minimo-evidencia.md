@@ -36,3 +36,16 @@ Os cinco Markdown voltaram `COMPLETED`. O vetor não ficou gravado: a atualizaç
 ## O que a tabela mostra
 
 O menor melhor score entre as perguntas respondíveis é 0,556, na pergunta 5. O maior melhor score entre as perguntas sem resposta é 0,619, na pergunta 10. Um único corte não separa os dois grupos: um mínimo que rejeita a pergunta 10 também rejeita as perguntas 5 e 6.
+
+## Segunda porta — 09/11/2026
+
+A API rodou dentro do Ubuntu, com o mínimo `0.556` e os cinco documentos já `COMPLETED`. Não houve novo upload.
+
+| # | Resultado | Tempo |
+|---|-----------|-------|
+| 7 | Abstenção, sem citação | 29,2 s |
+| 9 | Abstenção, sem citação | 1,7 s |
+| 8 | Abstenção, sem citação | 138,1 s |
+| 10 | Abstenção, sem citação | 95,3 s |
+
+As perguntas 7 e 9 ficaram abaixo do mínimo. As perguntas 8 e 10 passaram da primeira porta e a geração devolveu a frase fixa, com `citedChunkIds` vazio. Com o limite de `120s`, a pergunta 8 recebeu 503 aos 121,9 s. A frase acima foi medida com 10 minutos só nesse processo. O tempo de leitura passou a `180s`.
