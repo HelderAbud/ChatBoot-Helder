@@ -17,7 +17,6 @@ O que a API faz:
 Ainda não está pronto:
 
 - Tela, PDF e OpenAPI de terceiros.
-- Teste de isolamento entre dois workspaces contra um PostgreSQL real.
 
 O desenho da fatia está em `docs/superpowers/specs/2026-10-14-fatia-1-api-markdown-design.md`. As decisões fechadas estão em `AGENTS.md`.
 
@@ -30,7 +29,11 @@ $env:MAVEN_OPTS='-Djavax.net.ssl.trustStoreType=Windows-ROOT'
 .\mvnw.cmd test
 ```
 
-Os testes atuais não sobem banco nem modelo. Integração com PostgreSQL fica no Ubuntu, quando existir.
+Esse comando não sobe banco nem modelo. O isolamento entre dois workspaces roda no Ubuntu:
+
+```bash
+mvn -Pintegration test
+```
 
 ## Ambiente
 
